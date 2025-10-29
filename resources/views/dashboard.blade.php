@@ -12,7 +12,7 @@
     <nav class="bg-white shadow-md p-4 flex justify-between items-center">
         <h1 class="text-2xl font-bold text-green-600">My Dashboard</h1>
         <div>
-            <a href="#" class="text-gray-600 hover:text-green-600 mx-2">Home</a>
+            <a href="/home" class="text-gray-600 hover:text-green-600 mx-2">Home</a>
             <a href="#" class="text-gray-600 hover:text-green-600 mx-2">Profile</a>
             <a href="#" class="text-gray-600 hover:text-green-600 mx-2">Logout</a>
         </div>
