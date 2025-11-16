@@ -18,3 +18,7 @@ Route::get('profile', function () {
     return view('profile');
 });
 
+Route::get('contact', function () {
+    return view('contact');
+});
+
