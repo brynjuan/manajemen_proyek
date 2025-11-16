@@ -19,8 +19,13 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'nim',
+        'prodi',
+        'tahun_angkatan',
         'email',
         'password',
+        'role',
+        'qr_data',
     ];
 
     /**
@@ -30,7 +35,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -41,8 +45,17 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
+    public function meetingsAttended()
+    {
+        return $this->belongsToMany(Meeting::class, 'attendances')->withTimestamps()->withPivot('attended_at');
     }
 }
