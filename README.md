@@ -59,3 +59,10 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Kontribusi Desain UI/UX (Mahreczy Aditya Putra)
+
+**Designer UI/UX** pada proyek **Absensi Rapat** ini yaitu untuk membuat desain interface untuk pengguna secara lengkap menggunakan Figma, mulai dari layout, style visual, hingga prototype yang interaktif.
+
+### **Link Desain Figma**
+Link Figma: [Klik Disini](https://www.figma.com/design/FfWxavdqFPC0nIC0O4u82O/Responsive-Startup-Website--Community-?node-id=0-1&t=lidtvAcAtmypm2Ko-1)
