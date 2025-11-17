@@ -38,15 +38,26 @@
             <input type="text" name="nim" id="nim" value="{{ old('nim') }}" required
                 class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300" />
         </div>
-        <div>
+            <div>
             <label class="mb-1 block text-sm font-medium text-slate-700" for="prodi">Program Studi</label>
-            <input type="text" name="prodi" id="prodi" value="{{ old('prodi') }}" required
-                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300" />
+            <select name="prodi" id="prodi" required
+                    class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300">
+                <option value="">-- Pilih Program Studi --</option>
+                <option value="Teknik Informatika" {{ old('prodi') == 'Teknik Informatika' ? 'selected' : '' }}>Teknik Informatika</option>
+                <option value="Sistem Informasi" {{ old('prodi') == 'Sistem Informasi' ? 'selected' : '' }}>Sistem Informasi</option>
+            </select>
         </div>
+        
+        {{-- [DIUBAH] Input teks menjadi Select --}}
         <div>
             <label class="mb-1 block text-sm font-medium text-slate-700" for="tahun_angkatan">Tahun Angkatan</label>
-            <input type="text" name="tahun_angkatan" id="tahun_angkatan" value="{{ old('tahun_angkatan') }}" required
-                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300" />
+            <select name="tahun_angkatan" id="tahun_angkatan" required
+                    class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-300">
+                <option value="">-- Pilih Tahun Angkatan --</option>
+                @for ($year = 2020; $year <= 2025; $year++)
+                    <option value="{{ $year }}" {{ old('tahun_angkatan') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                @endfor
+            </select>
         </div>
         <div>
             <label class="mb-1 block text-sm font-medium text-slate-700" for="email">Email</label>

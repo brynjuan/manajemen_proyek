@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Illuminate\Validation\Rule;
 
 class MemberController extends Controller
 {
@@ -49,5 +50,59 @@ class MemberController extends Controller
         return redirect()
             ->route('admin.members.create')
             ->with('success', 'Anggota berhasil ditambahkan.');
+    }
+
+    public function edit(User $member): View
+    {
+        // $member akan otomatis di-resolve oleh Laravel berdasarkan {member} di URL
+        return view('admin.members.edit', compact('member'));
+    }
+
+    public function update(Request $request, User $member): RedirectResponse
+    {
+        // Validasi data
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'nim' => ['required', 'string', 'max:20', Rule::unique('users')->ignore($member->id)],
+            'prodi' => ['required', 'string', 'max:100'],
+            'tahun_angkatan' => ['required', 'integer', 'min:2000'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($member->id)],
+            'password' => ['nullable', 'string', 'min:8'], // Password opsional
+        ]);
+
+        // Siapkan data untuk update
+        $dataToUpdate = [
+            'name' => $validated['name'],
+            'nim' => $validated['nim'],
+            'prodi' => $validated['prodi'],
+            'tahun_angkatan' => $validated['tahun_angkatan'],
+            'email' => $validated['email'],
+        ];
+
+        // Hanya update password jika diisi
+        if (!empty($validated['password'])) {
+            $dataToUpdate['password'] = Hash::make($validated['password']);
+        }
+        
+        // Jika Anda ingin mengizinkan perubahan 'qr_data', tambahkan validasi dan field-nya di sini
+        // 'qr_data' => ['required', 'string', Rule::unique('users')->ignore($member->id)],
+
+        $member->update($dataToUpdate);
+
+        return redirect()->route('admin.members.index')->with('success', 'Data anggota berhasil diperbarui.');
+    }
+
+    /**
+     * Menghapus data anggota dari database.
+     */
+    public function destroy(User $member): RedirectResponse
+    {
+        // Hapus relasi absensi terlebih dahulu jika ada
+        $member->attendances()->delete(); 
+        
+        // Hapus user
+        $member->delete();
+
+        return redirect()->route('admin.members.index')->with('success', 'Data anggota berhasil dihapus.');
     }
 }

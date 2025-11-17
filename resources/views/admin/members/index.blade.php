@@ -23,6 +23,13 @@
                 <i class="fas fa-plus"></i> Tambah Anggota
             </a>
         </div>
+        
+        {{-- Tampilkan notifikasi sukses --}}
+        @if(session('success'))
+            <div class="rounded-lg border border-green-300 bg-green-50 p-4">
+                <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+            </div>
+        @endif
     </div>
 
     <div class="mt-6 overflow-hidden rounded-2xl bg-white shadow">
@@ -34,6 +41,9 @@
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Prodi</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Tahun</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Email</th>
+                    
+                    {{-- [BARU] Kolom Aksi --}}
+                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Aksi</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
@@ -44,10 +54,27 @@
                         <td class="px-4 py-3">{{ $member->prodi }}</td>
                         <td class="px-4 py-3">{{ $member->tahun_angkatan }}</td>
                         <td class="px-4 py-3">{{ $member->email }}</td>
+
+                        {{-- [BARU] Tombol Edit & Delete --}}
+                        <td class="px-4 py-3 text-right space-x-2 whitespace-nowrap">
+                            <a href="{{ route('admin.members.edit', $member) }}" 
+                               class="inline-flex items-center justify-center rounded-md border border-transparent bg-yellow-400 px-3 py-1.5 text-xs font-semibold text-yellow-900 hover:bg-yellow-500 transition-colors">
+                               Edit
+                            </a>
+                            <form action="{{ route('admin.members.destroy', $member) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus anggota ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" 
+                                        class="inline-flex items-center justify-center rounded-md border border-transparent bg-red-500 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-600 transition-colors">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">Belum ada anggota.</td>
+                        {{-- [DIUBAH] Colspan diubah menjadi 6 --}}
+                        <td colspan="6" class="px-4 py-6 text-center text-sm text-slate-500">Belum ada anggota.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -58,4 +85,3 @@
         {{ $members->links() }}
     </div>
 @endsection
-
