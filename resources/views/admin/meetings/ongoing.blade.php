@@ -22,20 +22,46 @@
                 <i class="fas fa-arrow-left"></i> Kembali
             </a>
         </div>
+
+        {{-- [BARU] Notifikasi sukses --}}
+        @if(session('success'))
+            <div class="rounded-lg border border-green-300 bg-green-50 p-4">
+                <p class="text-sm font-medium text-green-800">{{ session('success') }}</p>
+            </div>
+        @endif
     </div>
 
     <div class="space-y-4">
         @forelse ($meetings as $meeting)
-            <a href="{{ route('admin.meetings.scan', $meeting) }}"
-                class="flex items-center justify-between rounded-2xl bg-white p-6 shadow transition duration-200 transform hover:shadow-lg hover:scale-105">
+            {{-- [DIUBAH] Mengganti <a> dengan <div> dan menyesuaikan flex --}}
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-2xl bg-white p-6 shadow gap-4 transition duration-200 hover:shadow-lg">
                 <div>
                     <h2 class="text-lg font-semibold text-slate-900">{{ $meeting->title }}</h2>
                     <p class="mt-2 text-sm text-slate-500"><i class="fas fa-clock mr-2"></i>{{ $meeting->time->format('d M Y H:i') }} &middot; <i class="fas fa-map-marker-alt mr-1"></i>{{ $meeting->location }}</p>
                 </div>
-                <span class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-800 to-blue-500 px-4 py-2 text-sm font-medium text-white">
-                    Mulai Scan <i class="fas fa-arrow-right"></i>
-                </span>
-            </a>
+
+                {{-- [BARU] Grup Tombol Aksi --}}
+                <div class="flex-shrink-0 flex items-center gap-2 w-full sm:w-auto">
+                    <a href="{{ route('admin.meetings.scan', $meeting) }}"
+                       class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-800 to-blue-500 px-4 py-2 text-sm font-medium text-white">
+                        Mulai Scan <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="{{ route('admin.meetings.edit', $meeting) }}" 
+                       title="Edit"
+                       class="inline-flex items-center justify-center rounded-lg border border-transparent bg-yellow-400 p-2 text-sm font-semibold text-yellow-900 hover:bg-yellow-500 transition-colors">
+                       <i class="fas fa-edit w-4 h-4"></i>
+                    </a>
+                    <form action="{{ route('admin.meetings.destroy', $meeting) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus rapat ini? Semua data absensi terkait akan ikut terhapus.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" 
+                                title="Hapus"
+                                class="inline-flex items-center justify-center rounded-lg border border-transparent bg-red-500 p-2 text-sm font-semibold text-white hover:bg-red-600 transition-colors">
+                            <i class="fas fa-trash w-4 h-4"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
         @empty
             <div class="rounded-2xl bg-white p-6 text-center text-sm text-slate-500 shadow">
                 <i class="fas fa-inbox text-3xl mb-3 opacity-50"></i>
@@ -44,4 +70,3 @@
         @endforelse
     </div>
 @endsection
-

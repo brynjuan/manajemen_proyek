@@ -22,6 +22,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/members/create', [MemberController::class, 'create'])->name('members.create');
     Route::post('/members', [MemberController::class, 'store'])->name('members.store');
 
+    Route::get('/members/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
+    Route::put('/members/{member}', [MemberController::class, 'update'])->name('members.update');
+    Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
+
     Route::get('/meetings/create', [MeetingController::class, 'create'])->name('meetings.create');
     Route::post('/meetings', [MeetingController::class, 'store'])->name('meetings.store');
     Route::get('/meetings/ongoing', [MeetingController::class, 'ongoing'])->name('meetings.ongoing');
@@ -29,9 +33,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/meetings/{meeting}/scan', [MeetingController::class, 'storeScan'])->name('meetings.scan.store');
     Route::post('/meetings/{meeting}/finish', [MeetingController::class, 'finish'])->name('meetings.finish');
 
+    Route::get('/meetings/{meeting}/edit', [MeetingController::class, 'edit'])->name('meetings.edit');
+    Route::put('/meetings/{meeting}', [MeetingController::class, 'update'])->name('meetings.update');
+    Route::delete('/meetings/{meeting}', [MeetingController::class, 'destroy'])->name('meetings.destroy');
+
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/{meeting}', [ReportController::class, 'show'])->name('reports.show');
     Route::get('/reports/{meeting}/pdf', [ReportController::class, 'download'])->name('reports.pdf');
+    Route::post('/reports/{meeting}/attendances', [ReportController::class, 'addAttendance'])->name('reports.attendances.add');
+    Route::delete('/reports/{meeting}/attendances/{user}', [ReportController::class, 'removeAttendance'])->name('reports.attendances.remove');
 
     Route::get('/profile', [ProfileController::class, 'admin'])->name('profile.show');
     Route::post('/profile', [ProfileController::class, 'updateAdmin'])->name('profile.update');

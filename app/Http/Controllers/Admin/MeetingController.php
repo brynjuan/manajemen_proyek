@@ -117,4 +117,59 @@ class MeetingController extends Controller
             ->route('admin.reports.show', $meeting)
             ->with('success', 'Rapat berhasil diakhiri.');
     }
+
+    public function edit(Meeting $meeting): View|RedirectResponse
+    {
+        // Hanya rapat 'ongoing' yang bisa diedit
+        if ($meeting->status !== 'ongoing') {
+            return redirect()
+                ->route('admin.reports.index')
+                ->withErrors('Rapat yang sudah selesai tidak bisa diedit.');
+        }
+
+        return view('admin.meetings.edit', compact('meeting'));
+    }
+
+    public function update(Request $request, Meeting $meeting): RedirectResponse
+    {
+        // Hanya rapat 'ongoing' yang bisa diupdate
+        if ($meeting->status !== 'ongoing') {
+            return redirect()
+                ->route('admin.reports.index')
+                ->withErrors('Rapat yang sudah selesai tidak bisa diperbarui.');
+        }
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'time' => ['required', 'date'],
+            'location' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+        ]);
+
+        $meeting->update($validated);
+
+        return redirect()
+            ->route('admin.meetings.ongoing')
+            ->with('success', 'Data rapat berhasil diperbarui.');
+    }
+
+    public function destroy(Meeting $meeting): RedirectResponse
+    {
+        // Hanya rapat 'ongoing' yang bisa dihapus
+        if ($meeting->status !== 'ongoing') {
+            return redirect()
+                ->route('admin.reports.index')
+                ->withErrors('Rapat yang sudah selesai tidak bisa dihapus.');
+        }
+
+        // Hapus semua data absensi terkait terlebih dahulu
+        $meeting->attendances()->delete();
+
+        // Hapus rapat
+        $meeting->delete();
+
+        return redirect()
+            ->route('admin.meetings.ongoing')
+            ->with('success', 'Rapat berhasil dihapus.');
+    }
 }
