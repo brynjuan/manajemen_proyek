@@ -1,10 +1,10 @@
-# Konfigurasi Nixpacks Railway (Full Manual)
+# Konfigurasi Nixpacks Railway (Fix JSON Extension Error)
 # providers = [] mematikan deteksi otomatis agar paket default yang rusak tidak ditambahkan
 providers = []
 
 [phases.setup]
 nixPkgs = [
-    'git',                     # Dibutuhkan composer untuk download repo
+    'git',
     'php82',
     'php82Extensions.gd',
     'php82Extensions.pdo',
@@ -16,12 +16,12 @@ nixPkgs = [
     'php82Extensions.tokenizer',
     'php82Extensions.xml',
     'php82Extensions.ctype',
-    'php82Extensions.json',
+    # 'php82Extensions.json',  <-- DIHAPUS (Sudah built-in di PHP 8.2)
     'php82Extensions.curl',
     'php82Extensions.bcmath',
     'php82Extensions.intl',
-    'php82Packages.composer',  # Gunakan versi spesifik ini
-    'nodejs_20'                # nodejs_20 SUDAH otomatis menyertakan npm
+    'php82Packages.composer',
+    'nodejs_20'
 ]
 
 [phases.build]
