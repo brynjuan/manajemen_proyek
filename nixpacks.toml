@@ -1,10 +1,10 @@
-# Konfigurasi Nixpacks Railway (Final Fix)
+# Konfigurasi Nixpacks Railway (Fix Composer Variable)
 
 [phases.setup]
-# Kita meminta paket PHP dan SEMUA ekstensi yang umum dibutuhkan
+# Menggunakan php82Packages.composer menggantikan 'composer' yang error
 nixPkgs = [
     'php82',
-    'php82Extensions.gd',       # Library gambar (QR Code)
+    'php82Extensions.gd',
     'php82Extensions.pdo',
     'php82Extensions.pgsql',
     'php82Extensions.fileinfo',
@@ -18,7 +18,7 @@ nixPkgs = [
     'php82Extensions.curl',
     'php82Extensions.bcmath',
     'php82Extensions.intl',
-    'composer',
+    'php82Packages.composer',  # <--- PERUBAHAN DI SINI
     'nodejs_20',
     'npm'
 ]
@@ -29,8 +29,8 @@ cmds = [
     'npm install',
     'npm run build',
     
-    # 2. Install dependensi PHP dengan FLAG KHUSUS
-    # --ignore-platform-req=ext-gd: Memaksa composer lanjut meski tidak mendeteksi GD saat build
+    # 2. Install dependensi PHP
+    # Kita tetap pertahankan flag --ignore-platform-req=ext-gd untuk keamanan ekstra
     'composer install --optimize-autoloader --no-dev --no-interaction --progress --ignore-platform-req=ext-gd',
     
     # 3. Cache konfigurasi Laravel
