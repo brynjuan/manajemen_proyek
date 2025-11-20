@@ -20,9 +20,8 @@ nixPkgs = [
     'php82Extensions.curl',
     'php82Extensions.bcmath',
     'php82Extensions.intl',
-    'php82Packages.composer',  # Gunakan versi spesifik ini, bukan 'composer' umum
-    'nodejs_20',
-    'npm'
+    'php82Packages.composer',  # Gunakan versi spesifik ini
+    'nodejs_20'                # nodejs_20 SUDAH otomatis menyertakan npm
 ]
 
 [phases.build]
