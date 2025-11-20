@@ -4,38 +4,77 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str; // Tambahkan jika perlu membuat qr_data manual
 
 class MemberController extends Controller
 {
-    public function index(): View
+    /**
+     * Menampilkan daftar semua anggota.
+     */
+    public function index(Request $request): View
     {
-        $members = User::where('role', 'anggota')->orderBy('nim')->paginate(10);
+        // Mulai query untuk user dengan role 'anggota'
+        $query = User::where('role', 'anggota');
 
-        return view('admin.members.index', compact('members'));
+        // Filter Pencarian (Nama atau NIM)
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('nim', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter Program Studi
+        if ($request->has('prodi') && $request->prodi != '') {
+            $query->where('prodi', $request->prodi);
+        }
+
+        // Filter Tahun Angkatan
+        if ($request->has('angkatan') && $request->angkatan != '') {
+            $query->where('tahun_angkatan', $request->angkatan);
+        }
+
+        // Urutkan dan Paginate
+        // Menggunakan append agar parameter pencarian tetap ada saat pindah halaman
+        $members = $query->orderBy('name')->paginate(10)->withQueryString();
+
+        // Ambil data unik untuk opsi filter dropdown
+        $prodis = User::where('role', 'anggota')->distinct()->pluck('prodi')->filter()->sort();
+        $angkatans = User::where('role', 'anggota')->distinct()->pluck('tahun_angkatan')->filter()->sortDesc();
+
+        return view('admin.members.index', compact('members', 'prodis', 'angkatans'));
     }
 
+    /**
+     * Menampilkan form untuk membuat anggota baru.
+     */
     public function create(): View
     {
         return view('admin.members.create');
     }
 
+    /**
+     * Menyimpan anggota baru ke database.
+     */
     public function store(Request $request): RedirectResponse
     {
+        // Validasi input
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'nim' => ['required', 'string', 'max:50', 'unique:users,nim'],
-            'prodi' => ['required', 'string', 'max:255'],
-            'tahun_angkatan' => ['required', 'string', 'max:10'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:6'],
+            'nim' => ['required', 'string', 'max:20', 'unique:users'],
+            'prodi' => ['required', 'string', 'max:100'],
+            'tahun_angkatan' => ['required', 'integer', 'min:2000'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8'],
         ]);
 
+        // Buat user baru
         User::create([
             'name' => $validated['name'],
             'nim' => $validated['nim'],
@@ -44,20 +83,24 @@ class MemberController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => 'anggota',
-            'qr_data' => Str::uuid()->toString(),
+            // Generate unique string untuk QR Data
+            'qr_data' => (string) Str::uuid(), 
         ]);
 
-        return redirect()
-            ->route('admin.members.create')
-            ->with('success', 'Anggota berhasil ditambahkan.');
+        return redirect()->route('admin.members.index')->with('success', 'Anggota berhasil ditambahkan.');
     }
 
+    /**
+     * Menampilkan form untuk mengedit anggota.
+     */
     public function edit(User $member): View
     {
-        // $member akan otomatis di-resolve oleh Laravel berdasarkan {member} di URL
         return view('admin.members.edit', compact('member'));
     }
 
+    /**
+     * Memperbarui data anggota di database.
+     */
     public function update(Request $request, User $member): RedirectResponse
     {
         // Validasi data
@@ -83,9 +126,6 @@ class MemberController extends Controller
         if (!empty($validated['password'])) {
             $dataToUpdate['password'] = Hash::make($validated['password']);
         }
-        
-        // Jika Anda ingin mengizinkan perubahan 'qr_data', tambahkan validasi dan field-nya di sini
-        // 'qr_data' => ['required', 'string', Rule::unique('users')->ignore($member->id)],
 
         $member->update($dataToUpdate);
 
