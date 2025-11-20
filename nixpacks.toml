@@ -1,26 +1,44 @@
+# Konfigurasi Nixpacks Railway (Final Fix)
+
 [phases.setup]
-# Kita secara eksplisit meminta php82 DAN ekstensinya (termasuk gd)
-# Ubah 'php82' menjadi 'php83' jika di composer.json Anda menggunakan PHP 8.3
+# Kita meminta paket PHP dan SEMUA ekstensi yang umum dibutuhkan
 nixPkgs = [
-    'php82', 
-    'php82Extensions.gd', 
-    'php82Extensions.pdo', 
-    'php82Extensions.pgsql', 
+    'php82',
+    'php82Extensions.gd',       # Library gambar (QR Code)
+    'php82Extensions.pdo',
+    'php82Extensions.pgsql',
     'php82Extensions.fileinfo',
     'php82Extensions.zip',
-    'composer', 
-    'nodejs_20', 
+    'php82Extensions.mbstring',
+    'php82Extensions.openssl',
+    'php82Extensions.tokenizer',
+    'php82Extensions.xml',
+    'php82Extensions.ctype',
+    'php82Extensions.json',
+    'php82Extensions.curl',
+    'php82Extensions.bcmath',
+    'php82Extensions.intl',
+    'composer',
+    'nodejs_20',
     'npm'
 ]
 
 [phases.build]
 cmds = [
-    'composer install --no-dev --optimize-autoloader',
+    # 1. Install dependensi frontend
     'npm install',
     'npm run build',
+    
+    # 2. Install dependensi PHP dengan FLAG KHUSUS
+    # --ignore-platform-req=ext-gd: Memaksa composer lanjut meski tidak mendeteksi GD saat build
+    'composer install --optimize-autoloader --no-dev --no-interaction --progress --ignore-platform-req=ext-gd',
+    
+    # 3. Cache konfigurasi Laravel
     'php artisan config:cache',
     'php artisan route:cache',
     'php artisan view:cache',
+    
+    # 4. Migrasi Database
     'php artisan migrate --force'
 ]
 
