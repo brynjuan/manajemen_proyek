@@ -15,9 +15,9 @@ class DashboardController extends Controller
 
         return view('anggota.dashboard', [
             'attendanceCount' => $user->attendances()->count(),
-            'upcomingMeetings' => Meeting::where('status', 'ongoing')
+            'ongoingMeetings' => Meeting::withCount('attendances')
+                ->where('status', 'ongoing')
                 ->orderBy('time')
-                ->take(5)
                 ->get(),
         ]);
     }

@@ -26,11 +26,12 @@
                 </div>
                 <input id="password" name="password" type="password" required
                     class="flex-1 px-3 py-2 rounded-md bg-white text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-white">
-            </div>
-
-            <!-- Forgot Password -->
-            <div class="text-right">
-                <a href="#" class="text-sm text-white hover:text-gray-200 transition">Forgot Password?</a>
+                
+                <!-- Tombol Mata -->
+                <button type="button" onclick="togglePassword()" 
+                    class="text-white text-lg focus:outline-none">
+                    <i id="toggleIcon" class="fas fa-eye"></i>
+                </button>
             </div>
 
             <!-- Submit Button -->
@@ -40,5 +41,22 @@
             </button>
         </form>
     </div>
-@endsection
 
+    @section('scripts')
+        <script>
+            function togglePassword() {
+                const passwordInput = document.getElementById('password');
+                const toggleIcon = document.getElementById('toggleIcon');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            }
+        </script>
+    @endsection
+@endsection
