@@ -1,68 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Absensi Rapat Berbasis QR Code 
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Laravel](https://img.shields.io/badge/Laravel-11-red) ![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-blue) ![Status](https://img.shields.io/badge/Status-Completed-success)
 
-## About Laravel
+Sistem manajemen absensi rapat digital yang dirancang untuk efisiensi dan akurasi tinggi. Aplikasi ini memungkinkan administrator untuk mengelola rapat dan anggota, serta memungkinkan proses absensi cepat menggunakan pemindaian QR Code (Scan Gun/Device) secara real-time.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Aplikasi ini telah dioptimalkan untuk penggunaan mobile (responsif) dan siap untuk environment production.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🌟 Fitur Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🛡️ Panel Admin
+* **Dashboard Statistik:** Visualisasi data rapat, total anggota, dan tren kehadiran menggunakan grafik interaktif (Chart.js).
+* **Manajemen Anggota:** CRUD lengkap dengan fitur pencarian, filter (Prodi/Angkatan), dan import data masif (Seeding).
+* **Manajemen Rapat:** Membuat rapat, memantau status (*ongoing/finished*), dan menutup sesi rapat.
+* **Scanning Absensi:** Halaman khusus scan QR Code yang mendukung input dari *Scanner Gun* dengan fitur *auto-focus*, validasi real-time, dan pencegahan input ganda (*debounce*).
+* **Laporan & Ekspor:** Rekapitulasi kehadiran per rapat dan fitur ekspor ke PDF siap cetak (A4).
+* **Absensi Manual:** Fitur *fallback* untuk mencatat kehadiran anggota secara manual jika tidak membawa QR Code.
 
-## Learning Laravel
+### 👤 Panel Anggota
+* **QR Code Pribadi:** Identitas unik berbasis UUID untuk setiap anggota.
+* **Riwayat Kehadiran:** Daftar rapat yang telah dihadiri.
+* **Profil Pengguna:** Manajemen data diri.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🛠️ Teknologi yang Digunakan
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Backend:**
+* **Framework:** Laravel 11 (PHP 8.2)
+* **Database:** MySQL (Local) / PostgreSQL (Production)
+* **Authentication:** Manual Auth implementation (Controller & Middleware based).
+* **Libraries:**
+    * `simplesoftwareio/simple-qrcode` (QR Generation)
+    * `barryvdh/laravel-dompdf` (PDF Export)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Frontend:**
+* **Styling:** Tailwind CSS (via Vite)
+* **Charting:** Chart.js
+* **Scripting:** Vanilla JavaScript (AJAX scanning logic, Debounce, Interactive UI).
 
-## Laravel Sponsors
+**Infrastruktur:**
+* **Deployment:** Railway
+* **Web Server:** Nginx (via Nixpacks)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## ⚙️ Instalasi dan Pengaturan Lokal
 
-### Premium Partners
+Ikuti langkah berikut untuk menjalankan proyek di komputer lokal Anda:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1.  **Clone Repositori**
+    ```bash
+    git clone [https://github.com/username/repo-name.git](https://github.com/username/repo-name.git)
+    cd repo-name
+    ```
 
-## Contributing
+2.  **Instal Dependensi**
+    ```bash
+    composer install
+    npm install
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3.  **Konfigurasi Environment**
+    Salin file `.env.example` menjadi `.env` dan sesuaikan kredensial database Anda.
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
 
-## Code of Conduct
+4.  **Migrasi dan Seeding Data**
+    Jalankan migrasi database dan isi data dummy (Angkatan 2020-2024).
+    ```bash
+    php artisan migrate --seed
+    ```
+    *Catatan: Seeder menggunakan metode `upsert` untuk mencegah duplikasi data.*
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5.  **Jalankan Aplikasi**
+    Buka dua terminal terpisah untuk menjalankan server Laravel dan Vite.
+    ```bash
+    php artisan serve
+    ```
+    ```bash
+    npm run dev
+    ```
 
-## Security Vulnerabilities
+## 🗃️ Struktur Database
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Sistem ini menggunakan relasi **Many-to-Many** antara `Users` dan `Meetings` melalui tabel pivot `Attendances`.
 
-## License
+* **Users:** Menyimpan data anggota (NIM, QR Data [UUID], Role, dll). Indexing diterapkan pada kolom `nim` dan `qr_data`.
+* **Meetings:** Menyimpan data rapat dan status (`ongoing`, `finished`).
+* **Attendances:** Mencatat waktu kehadiran (`attended_at`) dengan validasi unik pair `user_id` + `meeting_id`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 👥 Tim Pengembang
 
-## Kontribusi Desain UI/UX (Mahreczy Aditya Putra)
+Proyek ini diselesaikan dalam waktu 4 minggu oleh tim berikut:
 
-**Designer UI/UX** pada proyek **Absensi Rapat** ini yaitu untuk membuat desain interface untuk pengguna secara lengkap menggunakan Figma, mulai dari layout, style visual, hingga prototype yang interaktif.
+| Peran | Nama | NIM | Tanggung Jawab Utama |
+| :--- | :--- | :--- | :--- |
+| **Backend 1** | Fahril Antonio Hande | F55123031 | Inisiasi Laravel, Model & Eloquent, Meeting Logic, Reporting. |
+| **Backend 2** | Zaky Putera Safandra | F55123011 | Authentication, Role Middleware, QR Logic, Deployment Railway. |
+| **Frontend 1** | Putri Cassiola Mokondongan | F55123008 | Setup Tailwind, Layouting, Dashboard UI, Mobile Responsiveness. |
+| **Frontend 2** | Fransisca Aprilia Tarabu | F55123012 | Auth Pages, CRUD UI, Scan Interface, UX improvements. |
+| **Database** | Aura Nayla Djogja | F55123043 | ERD Design, Migrations, Seeding Strategy, Optimization. |
+| **UI/UX** | Mahreczy | F55123007 | Prototyping, Design System, User Flow. |
+
+## 📄 Lisensi
+
+[MIT License](LICENSE)
 
 ### **Link Desain Figma**
 Link Figma: [Klik Disini](https://www.figma.com/design/FfWxavdqFPC0nIC0O4u82O/Responsive-Startup-Website--Community-?node-id=0-1&t=lidtvAcAtmypm2Ko-1)
