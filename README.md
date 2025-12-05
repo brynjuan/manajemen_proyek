@@ -93,8 +93,9 @@ Proyek ini diselesaikan dalam waktu 4 minggu oleh tim berikut:
 
 | Peran | Nama | NIM | Tanggung Jawab Utama |
 | :--- | :--- | :--- | :--- |
+| **PROJECT MANAGER** | Briant Juan Hamonangan | F55123030 | Pembuatan repo, Evaluasi code sebelum masuk main, Deployment Railway, Membagi tugas dan mengatur anggota. |
 | **Backend 1** | Fahril Antonio Hande | F55123031 | Inisiasi Laravel, Model & Eloquent, Meeting Logic, Reporting. |
-| **Backend 2** | Zaky Putera Safandra | F55123011 | Authentication, Role Middleware, QR Logic, Deployment Railway. |
+| **Backend 2** | Zaky Putera Safandra | F55123011 | Authentication, Role Middleware, QR Logic. |
 | **Frontend 1** | Putri Cassiola Mokondongan | F55123008 | Setup Tailwind, Layouting, Dashboard UI, Mobile Responsiveness. |
 | **Frontend 2** | Fransisca Aprilia Tarabu | F55123012 | Auth Pages, CRUD UI, Scan Interface, UX improvements. |
 | **Database** | Aura Nayla Djogja | F55123043 | ERD Design, Migrations, Seeding Strategy, Optimization. |
